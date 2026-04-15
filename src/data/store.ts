@@ -149,6 +149,10 @@ export const addEPI = (e: Omit<EPI, "id">) => {
 // EPI Deliveries
 export const getEPIDeliveries = () => [...epiDeliveries];
 export const addEPIDelivery = (d: Omit<EPIDelivery, "id">) => {
+  const epi = epis.find(e => e.id === d.epiId);
+  if (epi) {
+    epi.quantity = Math.max(0, epi.quantity - (d.quantity || 1));
+  }
   const delivery = { ...d, id: genId() };
   epiDeliveries.push(delivery);
   return delivery;
@@ -158,6 +162,10 @@ export const returnEPI = (deliveryId: string) => {
   if (!d) return;
   d.status = "devolvido";
   d.returnDate = new Date().toISOString().split("T")[0];
+  const epi = epis.find(e => e.id === d.epiId);
+  if (epi) {
+    epi.quantity += d.quantity || 1;
+  }
   return d;
 };
 
