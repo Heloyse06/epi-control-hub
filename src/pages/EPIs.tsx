@@ -115,6 +115,7 @@ export default function EPIs() {
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">Descrição</th>
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground">Qtd</th>
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Validade</th>
+                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -124,6 +125,15 @@ export default function EPIs() {
                     <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{e.description}</td>
                     <td className="px-4 py-3">{e.quantity}</td>
                     <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{e.expiryDate}</td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => setEditingEPI({ id: e.id, type: e.type, description: e.description, quantity: String(e.quantity), expiryDate: e.expiryDate })}
+                        className="text-xs px-2 py-1 rounded-md border border-border text-foreground hover:bg-muted transition-colors"
+                        title="Editar EPI"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
