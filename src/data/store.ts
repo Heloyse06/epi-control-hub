@@ -145,6 +145,12 @@ export const addEPI = (e: Omit<EPI, "id">) => {
   epis.push(epi);
   return epi;
 };
+export const updateEPI = (id: string, data: Partial<Omit<EPI, "id">>) => {
+  const epi = epis.find(e => e.id === id);
+  if (!epi) return;
+  Object.assign(epi, data);
+  return epi;
+};
 
 // EPI Deliveries
 export const getEPIDeliveries = () => [...epiDeliveries];

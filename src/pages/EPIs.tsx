@@ -1,6 +1,6 @@
 import { useState, useMemo, Fragment } from "react";
-import { getEPIs, getEPIDeliveries, getEmployees, addEPI, addEPIDelivery, returnEPI } from "@/data/store";
-import { Plus, Search, X, Package, RotateCcw, Truck } from "lucide-react";
+import { getEPIs, getEPIDeliveries, getEmployees, addEPI, addEPIDelivery, returnEPI, updateEPI } from "@/data/store";
+import { Plus, Search, X, Package, RotateCcw, Truck, Pencil } from "lucide-react";
 
 export default function EPIs() {
   const [refresh, setRefresh] = useState(0);
