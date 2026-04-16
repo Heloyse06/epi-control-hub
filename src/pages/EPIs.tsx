@@ -1,6 +1,6 @@
 import { useState, useMemo, Fragment } from "react";
-import { getEPIs, getEPIDeliveries, getEmployees, addEPI, addEPIDelivery, returnEPI } from "@/data/store";
-import { Plus, Search, X, Package, RotateCcw, Truck } from "lucide-react";
+import { getEPIs, getEPIDeliveries, getEmployees, addEPI, addEPIDelivery, returnEPI, updateEPI } from "@/data/store";
+import { Plus, Search, X, Package, RotateCcw, Truck, Pencil } from "lucide-react";
 
 export default function EPIs() {
   const [refresh, setRefresh] = useState(0);
@@ -8,6 +8,7 @@ export default function EPIs() {
   const [search, setSearch] = useState("");
   const [showAddEPI, setShowAddEPI] = useState(false);
   const [showDeliver, setShowDeliver] = useState(false);
+  const [editingEPI, setEditingEPI] = useState<null | { id: string; type: string; description: string; quantity: string; expiryDate: string }>(null);
   const [epiForm, setEpiForm] = useState({ type: "", description: "", quantity: "", expiryDate: "" });
   const [deliverForm, setDeliverForm] = useState({ epiId: "", employeeId: "", quantity: "1" });
 
@@ -31,6 +32,18 @@ export default function EPIs() {
     addEPI({ type: epiForm.type, description: epiForm.description, quantity: parseInt(epiForm.quantity), expiryDate: epiForm.expiryDate });
     setEpiForm({ type: "", description: "", quantity: "", expiryDate: "" });
     setShowAddEPI(false);
+    setRefresh(r => r + 1);
+  };
+
+  const handleEditEPI = () => {
+    if (!editingEPI || !editingEPI.type || !editingEPI.quantity) return;
+    updateEPI(editingEPI.id, {
+      type: editingEPI.type,
+      description: editingEPI.description,
+      quantity: parseInt(editingEPI.quantity),
+      expiryDate: editingEPI.expiryDate,
+    });
+    setEditingEPI(null);
     setRefresh(r => r + 1);
   };
 
@@ -102,6 +115,7 @@ export default function EPIs() {
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">Descrição</th>
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground">Qtd</th>
                   <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Validade</th>
+                  <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,6 +125,15 @@ export default function EPIs() {
                     <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{e.description}</td>
                     <td className="px-4 py-3">{e.quantity}</td>
                     <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{e.expiryDate}</td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => setEditingEPI({ id: e.id, type: e.type, description: e.description, quantity: String(e.quantity), expiryDate: e.expiryDate })}
+                        className="text-xs px-2 py-1 rounded-md border border-border text-foreground hover:bg-muted transition-colors"
+                        title="Editar EPI"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -213,6 +236,35 @@ export default function EPIs() {
                 className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
               <button onClick={handleDeliver} className="w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">
                 Registrar Entrega
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit EPI Modal */}
+      {editingEPI && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/30" onClick={() => setEditingEPI(null)}>
+          <div className="bg-card rounded-xl shadow-xl w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-foreground">Editar EPI</h3>
+              <button onClick={() => setEditingEPI(null)} className="p-1 rounded-md hover:bg-muted"><X className="h-4 w-4" /></button>
+            </div>
+            <div className="space-y-3">
+              <label className="block text-xs font-medium text-muted-foreground">Tipo</label>
+              <input value={editingEPI.type} onChange={e => setEditingEPI(p => p ? { ...p, type: e.target.value } : p)}
+                className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <label className="block text-xs font-medium text-muted-foreground">Descrição</label>
+              <input value={editingEPI.description} onChange={e => setEditingEPI(p => p ? { ...p, description: e.target.value } : p)}
+                className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <label className="block text-xs font-medium text-muted-foreground">Quantidade</label>
+              <input type="number" value={editingEPI.quantity} onChange={e => setEditingEPI(p => p ? { ...p, quantity: e.target.value } : p)}
+                className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <label className="block text-xs font-medium text-muted-foreground">Validade</label>
+              <input type="date" value={editingEPI.expiryDate} onChange={e => setEditingEPI(p => p ? { ...p, expiryDate: e.target.value } : p)}
+                className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <button onClick={handleEditEPI} className="w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">
+                Salvar Alterações
               </button>
             </div>
           </div>
