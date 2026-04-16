@@ -241,6 +241,35 @@ export default function EPIs() {
           </div>
         </div>
       )}
+
+      {/* Edit EPI Modal */}
+      {editingEPI && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/30" onClick={() => setEditingEPI(null)}>
+          <div className="bg-card rounded-xl shadow-xl w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-foreground">Editar EPI</h3>
+              <button onClick={() => setEditingEPI(null)} className="p-1 rounded-md hover:bg-muted"><X className="h-4 w-4" /></button>
+            </div>
+            <div className="space-y-3">
+              <label className="block text-xs font-medium text-muted-foreground">Tipo</label>
+              <input value={editingEPI.type} onChange={e => setEditingEPI(p => p ? { ...p, type: e.target.value } : p)}
+                className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <label className="block text-xs font-medium text-muted-foreground">Descrição</label>
+              <input value={editingEPI.description} onChange={e => setEditingEPI(p => p ? { ...p, description: e.target.value } : p)}
+                className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <label className="block text-xs font-medium text-muted-foreground">Quantidade</label>
+              <input type="number" value={editingEPI.quantity} onChange={e => setEditingEPI(p => p ? { ...p, quantity: e.target.value } : p)}
+                className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <label className="block text-xs font-medium text-muted-foreground">Validade</label>
+              <input type="date" value={editingEPI.expiryDate} onChange={e => setEditingEPI(p => p ? { ...p, expiryDate: e.target.value } : p)}
+                className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <button onClick={handleEditEPI} className="w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">
+                Salvar Alterações
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
