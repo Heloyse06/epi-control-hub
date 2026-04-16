@@ -8,6 +8,7 @@ export default function EPIs() {
   const [search, setSearch] = useState("");
   const [showAddEPI, setShowAddEPI] = useState(false);
   const [showDeliver, setShowDeliver] = useState(false);
+  const [editingEPI, setEditingEPI] = useState<null | { id: string; type: string; description: string; quantity: string; expiryDate: string }>(null);
   const [epiForm, setEpiForm] = useState({ type: "", description: "", quantity: "", expiryDate: "" });
   const [deliverForm, setDeliverForm] = useState({ epiId: "", employeeId: "", quantity: "1" });
 
