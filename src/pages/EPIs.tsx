@@ -35,6 +35,18 @@ export default function EPIs() {
     setRefresh(r => r + 1);
   };
 
+  const handleEditEPI = () => {
+    if (!editingEPI || !editingEPI.type || !editingEPI.quantity) return;
+    updateEPI(editingEPI.id, {
+      type: editingEPI.type,
+      description: editingEPI.description,
+      quantity: parseInt(editingEPI.quantity),
+      expiryDate: editingEPI.expiryDate,
+    });
+    setEditingEPI(null);
+    setRefresh(r => r + 1);
+  };
+
   const handleDeliver = () => {
     if (!deliverForm.epiId || !deliverForm.employeeId) return;
     addEPIDelivery({
